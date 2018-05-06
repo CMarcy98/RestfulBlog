@@ -49,7 +49,7 @@ app.post("/blogs", function(req,res) {
 			res.redirect("/blogs");
 		}
 	});
-	// Redirect to blogs index
+	// Redirect to blog index
 });
 
 // Tells the app to listen on certain port
