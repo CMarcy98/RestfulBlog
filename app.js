@@ -52,6 +52,17 @@ app.post("/blogs", function(req,res) {
 	// Redirect to blogs index
 });
 
+// Show Specific blog
+app.get("/blogs/:id", function(req,res) {
+	Blog.findById(req.params.id, function(err, foundBlog) {
+		if(err) {
+			res.redirect("/blogs");
+		} else {
+			res.render("show", {blog: foundBlog});
+		}
+	});
+});
+
 // Tells the app to listen on certain port
 app.listen(8000, function() {
 	console.log("Blog server is turned on!")
