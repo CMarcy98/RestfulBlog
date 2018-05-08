@@ -87,8 +87,19 @@ app.put("/blogs/:id", function(req,res) {
 	});
 });
 
+// DELETE a blog
+app.delete("/blogs/:id", function(req,res) {
+	Blog.findByIdAndRemove(req.params.id, function(err) {
+		if(err) {
+			res.redirect("/blogs");
+        } else {
+			res.redirect("/blogs");
+		}
+	});
+});
+
 
 // Tells the app to listen on certain port
-app.listen(8000, function() {
+app.listen(process.env.port || 8000, function() {
 	console.log("Blog server is turned on!")
 });
