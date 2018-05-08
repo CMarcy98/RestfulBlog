@@ -1,4 +1,5 @@
 let bodyParser = require('body-parser'),
+methodOverride = require('method-override'),
 express = require('express'),
 mongoose = require('mongoose'),
 app = express();
@@ -8,6 +9,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 mongoose.connect('mongodb://localhost/restful_blog_app');
 app.use(express.static("public"));
+app.use(methodOverride("_method"));
 
 // MONGOOSE/MODEL Config
 let blogSchema = new mongoose.Schema({
@@ -49,7 +51,6 @@ app.post("/blogs", function(req,res) {
 			res.redirect("/blogs");
 		}
 	});
-	// Redirect to blogs index
 });
 
 // Show Specific blog
@@ -62,6 +63,30 @@ app.get("/blogs/:id", function(req,res) {
 		}
 	});
 });
+
+// EDIT Route - allows oyu to edit a certain blog post
+app.get("/blogs/:id/edit", function(req,res) {
+	Blog.findById(req.params.id, function(err, foundBlog) {
+		if(err) {
+			res.redirect("/blogs");
+		} else {
+            res.render("edit", {blog: foundBlog});
+        }
+
+    });
+});
+
+// UPDATE a certain blog given its id
+app.put("/blogs/:id", function(req,res) {
+	Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog) {
+		if(err) {
+			res.redirect("/blogs");
+		} else {
+			res.redirect("/blogs/" + req.params.id);
+		}
+	});
+});
+
 
 // Tells the app to listen on certain port
 app.listen(8000, function() {
